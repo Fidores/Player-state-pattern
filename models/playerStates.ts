@@ -6,26 +6,29 @@ export interface IPlayerState {
 	play(): void;
 	stop(): void;
 	pause(): void;
+	rewind(): void;
 }
 
-export class PlayerState implements IPlayerState {
-	constructor(private readonly _name?: string) {}
-	private _playerRef: Player;
-
-	init(playerRef) {
-		this._playerRef = playerRef;
-	}
+export abstract class PlayerState implements IPlayerState {
+	constructor(
+		private readonly _playerRef: Player,
+		private readonly _name?: string
+	) {}
 
 	play(): void {
-		this._playerRef.changeState(this._playerRef.playing);
+		this._playerRef.changeState(this._playerRef.states.get('playing'));
 	}
 
 	stop(): void {
-		this._playerRef.changeState(this._playerRef.stopped);
+		this._playerRef.changeState(this._playerRef.states.get('stopped'));
 	}
 
 	pause(): void {
-		this._playerRef.changeState(this._playerRef.paused);
+		this._playerRef.changeState(this._playerRef.states.get('paused'));
+	}
+
+	rewind(): void {
+		this._playerRef.changeState(this._playerRef.states.get('rewinding'));
 	}
 
 	load(): void {
@@ -47,7 +50,7 @@ export class PlayerState implements IPlayerState {
 
 export class PlayingState extends PlayerState implements IPlayerState {
 	load(): void {
-		this.playerRef.videEl.play();
+		this.playerRef.videoEl.play();
 	}
 
 	exit(): void {
@@ -61,8 +64,8 @@ export class PlayingState extends PlayerState implements IPlayerState {
 
 export class StoppedState extends PlayerState implements IPlayerState {
 	load(): void {
-		this.playerRef.videEl.pause();
-		this.playerRef.videEl.currentTime = 0;
+		this.playerRef.videoEl.pause();
+		this.playerRef.videoEl.currentTime = 0;
 	}
 
 	exit(): void {
@@ -76,7 +79,7 @@ export class StoppedState extends PlayerState implements IPlayerState {
 
 export class PausedState extends PlayerState implements IPlayerState {
 	load(): void {
-		this.playerRef.videEl.pause();
+		this.playerRef.videoEl.pause();
 	}
 
 	exit(): void {
@@ -86,4 +89,27 @@ export class PausedState extends PlayerState implements IPlayerState {
 	pause(): void {
 		console.log(`Already ${this.name}`);
 	}
+}
+
+export class RewindingState extends PlayerState implements IPlayerState {
+	rewind() {
+		console.log(`Already ${this.name}`);
+	}
+
+	load() {
+		this.playerRef.videoEl.pause();
+		this.playerRef.progressEl.addEventListener('input', this.progressHandler);
+	}
+
+	exit() {
+		this.playerRef.progressEl.removeEventListener(
+			'input',
+			this.progressHandler
+		);
+	}
+
+	private progressHandler = ($event: InputEvent) => {
+		const target = $event.target as HTMLInputElement;
+		this.playerRef.videoEl.currentTime = parseFloat(target.value);
+	};
 }
