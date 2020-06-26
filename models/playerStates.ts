@@ -3,9 +3,9 @@ import { Player } from './player';
 export interface IPlayerState {
 	load(): void;
 	exit(): void;
-	play?(): void;
-	stop?(): void;
-	pause?(): void;
+	play(): void;
+	stop(): void;
+	pause(): void;
 }
 
 export class PlayerState implements IPlayerState {
