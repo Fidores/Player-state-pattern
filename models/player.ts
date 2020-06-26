@@ -90,7 +90,6 @@ export class Player {
 		const videoEl = this._elements.get('video') as HTMLVideoElement;
 		const progressEl = this._elements.get('progress') as HTMLProgressElement;
 		const { currentTime, duration } = videoEl;
-		console.log({ currentTime, duration });
 
 		progressEl.setAttribute('max', duration.toString());
 		progressEl.value = currentTime;

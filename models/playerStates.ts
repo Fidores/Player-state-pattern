@@ -31,13 +31,9 @@ export abstract class PlayerState implements IPlayerState {
 		this._playerRef.changeState(this._playerRef.states.get('rewinding'));
 	}
 
-	load(): void {
-		throw new Error('Method not implemented.');
-	}
+	load(): void {}
 
-	exit(): void {
-		throw new Error('Method not implemented.');
-	}
+	exit(): void {}
 
 	get playerRef(): Player {
 		return this._playerRef;
@@ -52,14 +48,6 @@ export class PlayingState extends PlayerState implements IPlayerState {
 	load(): void {
 		this.playerRef.videoEl.play();
 	}
-
-	exit(): void {
-		console.log(`Exiting: ${this.name}`);
-	}
-
-	play(): void {
-		console.log(`Already ${this.name}`);
-	}
 }
 
 export class StoppedState extends PlayerState implements IPlayerState {
@@ -67,35 +55,15 @@ export class StoppedState extends PlayerState implements IPlayerState {
 		this.playerRef.videoEl.pause();
 		this.playerRef.videoEl.currentTime = 0;
 	}
-
-	exit(): void {
-		console.log(`Exiting: ${this.name}`);
-	}
-
-	stop(): void {
-		console.log(`Already ${this.name}`);
-	}
 }
 
 export class PausedState extends PlayerState implements IPlayerState {
 	load(): void {
 		this.playerRef.videoEl.pause();
 	}
-
-	exit(): void {
-		console.log(`Exiting: ${this.name}`);
-	}
-
-	pause(): void {
-		console.log(`Already ${this.name}`);
-	}
 }
 
 export class RewindingState extends PlayerState implements IPlayerState {
-	rewind() {
-		console.log(`Already ${this.name}`);
-	}
-
 	load() {
 		this.playerRef.videoEl.pause();
 		this.playerRef.progressEl.addEventListener('input', this.progressHandler);
