@@ -35,9 +35,9 @@ export class Player {
 	changeState(newState: PlayerState): void {
 		if (this.state === newState) return;
 
-		this.state.exit();
+		this.state.leave();
 		this.state = newState;
-		this.state.load();
+		this.state.enter();
 	}
 
 	private setupStates(): void {

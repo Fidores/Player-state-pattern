@@ -1,8 +1,8 @@
 import { Player } from './player';
 
 export interface IPlayerState {
-	load(): void;
-	exit(): void;
+	enter(): void;
+	leave(): void;
 	play(): void;
 	stop(): void;
 	pause(): void;
@@ -31,9 +31,9 @@ export abstract class PlayerState implements IPlayerState {
 		this._playerRef.changeState(this._playerRef.states.get('rewinding'));
 	}
 
-	load(): void {}
+	enter(): void {}
 
-	exit(): void {}
+	leave(): void {}
 
 	get playerRef(): Player {
 		return this._playerRef;
@@ -45,31 +45,31 @@ export abstract class PlayerState implements IPlayerState {
 }
 
 export class PlayingState extends PlayerState implements IPlayerState {
-	load(): void {
+	enter(): void {
 		this.playerRef.videoEl.play();
 	}
 }
 
 export class StoppedState extends PlayerState implements IPlayerState {
-	load(): void {
+	enter(): void {
 		this.playerRef.videoEl.pause();
 		this.playerRef.videoEl.currentTime = 0;
 	}
 }
 
 export class PausedState extends PlayerState implements IPlayerState {
-	load(): void {
+	enter(): void {
 		this.playerRef.videoEl.pause();
 	}
 }
 
 export class RewindingState extends PlayerState implements IPlayerState {
-	load() {
+	enter() {
 		this.playerRef.videoEl.pause();
 		this.playerRef.progressEl.addEventListener('input', this.progressHandler);
 	}
 
-	exit() {
+	leave() {
 		this.playerRef.progressEl.removeEventListener(
 			'input',
 			this.progressHandler
