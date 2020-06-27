@@ -1,7 +1,11 @@
 {
-  "devDependencies": {
-    "cssnano": "^4.1.10",
-    "sass": "^1.26.9",
-    "typescript": "^3.9.5"
-  }
+	"scripts": {
+		"build": "parcel build -d docs/ --public-url ./ index.html",
+		"serve": "parcel index.html"
+	},
+	"devDependencies": {
+		"cssnano": "^4.1.10",
+		"sass": "^1.26.9",
+		"typescript": "^3.9.5"
+	}
 }
